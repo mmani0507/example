@@ -1,14 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Best Available Berths</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background: #f4f4f4;
+            font-weight: bold;
+        }
+    </style>
 </head>
-
 <body>
-    <h1>Welcome</h1>
-</body>
 
+<h2>Best Available Berth per Coach {{$trainDetails['number']}} - {{$trainDetails['name']}}</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Coach</th>
+            <th>Berth No</th>
+            <th>Berth Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Distance (km)</th>
+            <th>Quota</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($bestByCoach as $coach => $bsd)
+            <tr>
+                <td>{{ $bsd['coach'] }}</td>
+                <td>{{ $bsd['berthNo'] }}</td>
+                <td>{{ $bsd['berthCode'] }}</td>
+                <td>{{ $bsd['from'] }}</td>
+                <td>{{ $bsd['to'] }}</td>
+                <td>{{ $bsd['distance'] }}</td>
+                <td>{{ $bsd['quota'] }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="7">No berths available</td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
+
+</body>
 </html>
