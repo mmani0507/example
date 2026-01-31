@@ -222,6 +222,70 @@
             border-left: 4px solid #1976d2;
         }
 
+        .autocomplete-container {
+            position: relative;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #667eea;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+        }
+
+        .autocomplete-dropdown.active {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .autocomplete-item:hover {
+            background: #f8f9fa;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .autocomplete-item span {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .autocomplete-loading {
+            padding: 12px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .autocomplete-no-results {
+            padding: 12px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+
         @media (max-width: 768px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -253,7 +317,10 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="trainNo">Train Number *</label>
-                        <input type="text" id="trainNo" placeholder="e.g., 12345" required>
+                        <div class="autocomplete-container">
+                            <input type="text" id="trainNo" placeholder="e.g., 12345 or train name" required autocomplete="off">
+                            <div class="autocomplete-dropdown" id="trainSuggestions"></div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="journeyDate">Journey Date *</label>
@@ -318,6 +385,82 @@
     <script>
         // Set today's date as default
         document.getElementById('journeyDate').valueAsDate = new Date();
+
+        // Train autocomplete functionality
+        let trainSuggestionsCache = null;
+        let autocompleteTimeout = null;
+
+        const trainInput = document.getElementById('trainNo');
+        const suggestionsDropdown = document.getElementById('trainSuggestions');
+
+        trainInput.addEventListener('input', (e) => {
+            const searchText = e.target.value.trim();
+            
+            clearTimeout(autocompleteTimeout);
+            
+            if (searchText.length < 1) {
+                suggestionsDropdown.classList.remove('active');
+                return;
+            }
+
+            autocompleteTimeout = setTimeout(() => {
+                searchTrains(searchText);
+            }, 300);
+        });
+
+        trainInput.addEventListener('focus', (e) => {
+            const searchText = e.target.value.trim();
+            if (searchText.length >= 1) {
+                searchTrains(searchText);
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.autocomplete-container')) {
+                suggestionsDropdown.classList.remove('active');
+            }
+        });
+
+        async function searchTrains(searchText) {
+            suggestionsDropdown.innerHTML = '<div class="autocomplete-loading">Searching trains...</div>';
+            suggestionsDropdown.classList.add('active');
+
+            try {
+                const response = await fetch(`https://api2.trainapp.in/api/train/${searchText}`);
+                const trains = await response.json();
+
+                if (!trains || trains.length === 0) {
+                    suggestionsDropdown.innerHTML = '<div class="autocomplete-no-results">No trains found</div>';
+                    return;
+                }
+
+                // Display suggestions
+                suggestionsDropdown.innerHTML = '';
+                trains.forEach(train => {
+                    // Parse train number and name from format "22601 - MAS SNSI SF EXP"
+                    const [trainNo, trainName] = train.t.split(' - ');
+                    
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.innerHTML = `
+                        <strong>${trainNo}</strong>
+                        <span>${trainName}</span>
+                    `;
+                    
+                    item.addEventListener('click', () => {
+                        trainInput.value = trainNo.trim();
+                        suggestionsDropdown.classList.remove('active');
+                    });
+                    
+                    suggestionsDropdown.appendChild(item);
+                });
+
+            } catch (error) {
+                console.error('Error fetching train suggestions:', error);
+                suggestionsDropdown.innerHTML = '<div class="autocomplete-no-results">Error loading suggestions</div>';
+            }
+        }
 
         // Form submission handler
         document.getElementById('searchForm').addEventListener('submit', async (e) => {
