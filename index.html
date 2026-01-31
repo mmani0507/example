@@ -1,16 +1,19 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Berth Availability Checker | GitHub Pages</title>
-    <meta name="description" content="Check train berth availability directly from your browser">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚆</text></svg>">
+    <title>Train Berth Availability Checker</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -21,30 +24,8 @@
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             padding: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .github-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #333;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-        
-        .github-badge:hover {
-            background: #444;
         }
         
         .header {
@@ -52,24 +33,17 @@
             margin-bottom: 40px;
             padding-bottom: 20px;
             border-bottom: 2px solid #f0f0f0;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
         }
         
         .header h1 {
             color: #333;
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         
         .header p {
             color: #666;
             font-size: 1.1rem;
-            line-height: 1.6;
         }
         
         .form-container {
@@ -78,9 +52,6 @@
             border-radius: 10px;
             margin-bottom: 30px;
             border: 1px solid #e9ecef;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
         }
         
         .form-group {
@@ -106,13 +77,13 @@
             border: 2px solid #dee2e6;
             border-radius: 8px;
             font-size: 16px;
-            transition: all 0.3s;
+            transition: border-color 0.3s;
         }
         
         input:focus, select:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
         .btn {
@@ -124,28 +95,29 @@
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
         
-        .btn:hover:not(:disabled) {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
         
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .loader {
             display: none;
             text-align: center;
-            padding: 40px;
+            padding: 20px;
         }
         
         .spinner {
@@ -155,7 +127,7 @@
             border-top: 4px solid #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 10px;
         }
         
         @keyframes spin {
@@ -163,16 +135,13 @@
             100% { transform: rotate(360deg); }
         }
         
-        .results-section {
-            display: none;
-        }
-        
         .train-info {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            display: none;
         }
         
         .train-info h3 {
@@ -185,55 +154,24 @@
             opacity: 0.9;
         }
         
-        .results-container {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .results-header {
-            background: #f8f9fa;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .results-count {
-            font-weight: 600;
-            color: #495057;
-        }
-        
-        .filters {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
         .results-table {
             width: 100%;
             border-collapse: collapse;
-            min-height: 200px;
+            display: none;
+            margin-top: 20px;
         }
         
         .results-table th {
-            background: #f8f9fa;
-            color: #495057;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             padding: 15px;
             text-align: left;
             font-weight: 600;
-            border-bottom: 2px solid #dee2e6;
         }
         
         .results-table td {
             padding: 12px 15px;
             border-bottom: 1px solid #e9ecef;
-            color: #333;
         }
         
         .results-table tr:hover {
@@ -242,14 +180,10 @@
         
         .no-results {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px;
             color: #6c757d;
-        }
-        
-        .no-results i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            opacity: 0.3;
+            font-size: 1.1rem;
+            display: none;
         }
         
         .error-message {
@@ -262,14 +196,26 @@
             display: none;
         }
         
-        .disclaimer {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
             padding: 15px;
+            background: #e9ecef;
             border-radius: 8px;
-            margin-top: 30px;
-            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .coach-filter {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .coach-filter select {
+            width: auto;
+            min-width: 150px;
         }
         
         @media (max-width: 768px) {
@@ -277,76 +223,53 @@
                 padding: 15px;
             }
             
-            .github-badge {
-                position: relative;
-                top: 0;
-                right: 0;
-                margin-bottom: 20px;
-                width: fit-content;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
             .form-row {
                 grid-template-columns: 1fr;
-            }
-            
-            .results-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .filters select {
-                width: 100%;
             }
             
             .results-table {
                 display: block;
                 overflow-x: auto;
             }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .coach-filter {
+                flex-direction: column;
+            }
+            
+            .coach-filter select {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="https://github.com/yourusername/train-berth-checker" class="github-badge" target="_blank">
-            <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
-                <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-            </svg>
-            View on GitHub
-        </a>
-        
         <div class="header">
             <h1>🚆 Train Berth Availability Checker</h1>
-            <p>Check available berths for Indian Railways trains directly from your browser. Enter train number and stations to find the best available berths.</p>
+            <p>Find the best available berths for your journey</p>
         </div>
         
         <div class="form-container">
             <div class="form-group">
-                <label for="trainNumber">Train Number *</label>
-                <input type="text" id="trainNumber" placeholder="e.g., 22691" required>
+                <label for="trainNumber">Train Number*</label>
+                <input type="text" id="trainNumber" placeholder="Enter train number (e.g., 22691)" required>
             </div>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="fromStation">From Station (3-letter code)</label>
+                    <label for="fromStation">From Station (Code)</label>
                     <input type="text" id="fromStation" placeholder="e.g., SBC">
-                    <small style="color: #666; margin-top: 5px; display: block;">Leave blank for current station</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="toStation">To Station (3-letter code)</label>
+                    <label for="toStation">To Station (Code)</label>
                     <input type="text" id="toStation" placeholder="e.g., NZM">
-                    <small style="color: #666; margin-top: 5px; display: block;">Leave blank for all stations</small>
                 </div>
                 
                 <div class="form-group">
@@ -364,476 +287,416 @@
             </div>
             
             <button id="checkButton" class="btn">
-                <span id="buttonText">🔍 Check Availability</span>
+                <span>🔍 Check Availability</span>
             </button>
         </div>
         
         <div class="loader" id="loader">
             <div class="spinner"></div>
-            <p id="loadingText">Fetching train data...</p>
+            <p>Fetching train data...</p>
         </div>
         
         <div class="error-message" id="errorMessage"></div>
         
-        <div class="results-section" id="resultsSection">
-            <div class="train-info" id="trainInfo">
-                <h3 id="trainName"></h3>
-                <p>Train No: <strong id="trainNo"></strong></p>
-            </div>
-            
-            <div class="results-container">
-                <div class="results-header">
-                    <div class="results-count" id="resultCount">0 berths found</div>
-                    <div class="filters">
-                        <div>
-                            <label for="coachFilter" style="font-size: 14px; color: #666;">Coach:</label>
-                            <select id="coachFilter">
-                                <option value="">All Coaches</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="sortBy" style="font-size: 14px; color: #666;">Sort by:</label>
-                            <select id="sortBy">
-                                <option value="distance-desc">Distance (High to Low)</option>
-                                <option value="distance-asc">Distance (Low to High)</option>
-                                <option value="coach">Coach</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="resultsContent">
-                    <table class="results-table" id="resultsTable">
-                        <thead>
-                            <tr>
-                                <th>Coach</th>
-                                <th>Berth No</th>
-                                <th>Berth Type</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>Distance (km)</th>
-                                <th>Quota</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsBody"></tbody>
-                    </table>
-                    
-                    <div class="no-results" id="noResults">
-                        <div>🚫</div>
-                        <h3>No berths available</h3>
-                        <p>Try different stations or check back later</p>
-                    </div>
-                </div>
+        <div class="status-bar" id="statusBar">
+            <div id="resultCount">0 berths found</div>
+            <div class="coach-filter">
+                <label>Filter by Coach:</label>
+                <select id="coachFilter">
+                    <option value="">All Coaches</option>
+                </select>
             </div>
         </div>
         
-        <div class="disclaimer">
-            <strong>Note:</strong> This tool uses publicly available APIs to fetch train data. Availability is shown for informational purposes only. 
-            For official booking, please visit <a href="https://www.irctc.co.in" target="_blank">IRCTC website</a>.
+        <div class="train-info" id="trainInfo">
+            <h3 id="trainName"></h3>
+            <p>Train No: <strong id="trainNo"></strong></p>
         </div>
+        
+        <div class="no-results" id="noResults">
+            No berths available for the selected criteria.
+        </div>
+        
+        <table class="results-table" id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Coach</th>
+                    <th>Berth No</th>
+                    <th>Berth Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Distance (km)</th>
+                    <th>Quota</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody">
+            </tbody>
+        </table>
     </div>
 
     <script>
-        // Configuration
-        const CONFIG = {
-            CORS_PROXY: 'https://api.allorigins.win/raw?url=', // Free CORS proxy
-            API_TIMEOUT: 30000,
-            MAX_COACHES: 20
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            const trainNumberInput = document.getElementById('trainNumber');
+            const fromStationInput = document.getElementById('fromStation');
+            const toStationInput = document.getElementById('toStation');
+            const classSelect = document.getElementById('class');
+            const checkButton = document.getElementById('checkButton');
+            const loader = document.getElementById('loader');
+            const errorMessage = document.getElementById('errorMessage');
+            const trainInfo = document.getElementById('trainInfo');
+            const trainName = document.getElementById('trainName');
+            const trainNo = document.getElementById('trainNo');
+            const resultsTable = document.getElementById('resultsTable');
+            const resultsBody = document.getElementById('resultsBody');
+            const noResults = document.getElementById('noResults');
+            const statusBar = document.getElementById('statusBar');
+            const resultCount = document.getElementById('resultCount');
+            const coachFilter = document.getElementById('coachFilter');
 
-        // State management
-        let currentResults = [];
-        let currentTrainDetails = null;
-
-        // DOM Elements
-        const elements = {
-            trainNumber: document.getElementById('trainNumber'),
-            fromStation: document.getElementById('fromStation'),
-            toStation: document.getElementById('toStation'),
-            classSelect: document.getElementById('class'),
-            checkButton: document.getElementById('checkButton'),
-            buttonText: document.getElementById('buttonText'),
-            loader: document.getElementById('loader'),
-            loadingText: document.getElementById('loadingText'),
-            errorMessage: document.getElementById('errorMessage'),
-            resultsSection: document.getElementById('resultsSection'),
-            trainInfo: document.getElementById('trainInfo'),
-            trainName: document.getElementById('trainName'),
-            trainNo: document.getElementById('trainNo'),
-            resultCount: document.getElementById('resultCount'),
-            coachFilter: document.getElementById('coachFilter'),
-            sortBy: document.getElementById('sortBy'),
-            resultsTable: document.getElementById('resultsTable'),
-            resultsBody: document.getElementById('resultsBody'),
-            noResults: document.getElementById('noResults')
-        };
-
-        // Initialize
-        function init() {
-            // Load saved preferences
-            loadPreferences();
-            
-            // Set up event listeners
-            elements.checkButton.addEventListener('click', checkAvailability);
-            elements.trainNumber.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') checkAvailability();
-            });
-            elements.coachFilter.addEventListener('change', filterResults);
-            elements.sortBy.addEventListener('change', filterResults);
-            
-            // Show initial state
-            updateUIState('idle');
-        }
-
-        // Load saved preferences from localStorage
-        function loadPreferences() {
-            const savedTrain = localStorage.getItem('lastTrain');
-            if (savedTrain) {
-                elements.trainNumber.value = savedTrain;
-            }
-        }
-
-        // Save preferences to localStorage
-        function savePreferences() {
-            if (elements.trainNumber.value) {
-                localStorage.setItem('lastTrain', elements.trainNumber.value);
-            }
-        }
-
-        // Update UI state
-        function updateUIState(state) {
-            switch(state) {
-                case 'idle':
-                    elements.loader.style.display = 'none';
-                    elements.resultsSection.style.display = 'none';
-                    elements.errorMessage.style.display = 'none';
-                    elements.checkButton.disabled = false;
-                    elements.buttonText.textContent = '🔍 Check Availability';
-                    break;
-                    
-                case 'loading':
-                    elements.loader.style.display = 'block';
-                    elements.resultsSection.style.display = 'none';
-                    elements.errorMessage.style.display = 'none';
-                    elements.checkButton.disabled = true;
-                    elements.buttonText.textContent = '⏳ Processing...';
-                    break;
-                    
-                case 'success':
-                    elements.loader.style.display = 'none';
-                    elements.resultsSection.style.display = 'block';
-                    elements.checkButton.disabled = false;
-                    elements.buttonText.textContent = '🔄 Check Again';
-                    break;
-                    
-                case 'error':
-                    elements.loader.style.display = 'none';
-                    elements.checkButton.disabled = false;
-                    elements.buttonText.textContent = '🔍 Check Availability';
-                    break;
-            }
-        }
-
-        // Show error message
-        function showError(message) {
-            elements.errorMessage.textContent = message;
-            elements.errorMessage.style.display = 'block';
-            updateUIState('error');
-        }
-
-        // Make API request with CORS proxy
-        async function makeRequest(url, useProxy = true) {
-            try {
-                const targetUrl = useProxy ? `${CONFIG.CORS_PROXY}${encodeURIComponent(url)}` : url;
-                
-                const response = await fetch(targetUrl, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                return { success: true, data };
-            } catch (error) {
-                console.error('Request failed:', error);
-                return { success: false, error: error.message };
-            }
-        }
-
-        // Get current date in YYYY-MM-DD format
-        function getCurrentDate() {
-            const now = new Date();
-            return now.toISOString().split('T')[0];
-        }
-
-        // Main function to check availability
-        async function checkAvailability() {
-            const trainNumber = elements.trainNumber.value.trim();
-            const from = elements.fromStation.value.trim().toUpperCase();
-            const to = elements.toStation.value.trim().toUpperCase();
-            const classFilter = elements.classSelect.value;
-            
-            if (!trainNumber) {
-                showError('Please enter a train number');
-                return;
-            }
-            
-            // Save preferences
-            savePreferences();
-            
-            // Reset state
-            updateUIState('loading');
-            elements.loadingText.textContent = 'Fetching train data...';
-            
-            try {
-                const journeyDate = getCurrentDate();
-                
-                // Step 1: Get train chart data
-                elements.loadingText.textContent = 'Fetching chart data...';
-                const chartUrl = `https://api2.trainapp.in/api/chart/${trainNumber}/${journeyDate}`;
-                const chartResult = await makeRequest(chartUrl);
-                
-                if (!chartResult.success) {
-                    throw new Error('Failed to fetch chart data');
-                }
-                
-                const chartData = chartResult.data;
-                const coaches = chartData?.cp || [];
-                
-                if (coaches.length === 0) {
-                    throw new Error('No coach data found for this train');
-                }
-                
-                // Step 2: Get train details
-                elements.loadingText.textContent = 'Fetching train details...';
-                const trainUrl = `https://api2.trainapp.in/api/train/${trainNumber}`;
-                const trainResult = await makeRequest(trainUrl);
-                
-                if (!trainResult.success) {
-                    throw new Error('Failed to fetch train details');
-                }
-                
-                const trainData = trainResult.data;
-                
-                if (!trainData?.stns) {
-                    throw new Error('Invalid train data received');
-                }
-                
-                // Update train info
-                currentTrainDetails = {
-                    number: trainData.number,
-                    name: trainData.name
-                };
-                
-                // Step 3: Process coaches
-                elements.loadingText.textContent = 'Processing berth availability...';
-                
-                const stationDistanceMap = {};
-                trainData.stns.forEach(stn => {
-                    stationDistanceMap[stn.code] = parseInt(stn.km) || 0;
-                });
-                
-                const stationCodes = Object.keys(stationDistanceMap);
-                const excludeFrom = to ? stationCodes.slice(stationCodes.indexOf(to)) : [];
-                const excludeTo = from ? stationCodes.slice(0, stationCodes.indexOf(from) + 1) : [];
-                
-                // Filter and limit coaches
-                let filteredCoaches = coaches;
-                if (classFilter) {
-                    filteredCoaches = coaches.filter(coach => {
-                        const [cls] = coach.split(':');
-                        return cls === classFilter.toUpperCase();
-                    });
-                }
-                
-                if (filteredCoaches.length === 0) {
-                    throw new Error(`No ${classFilter} coaches found on this train`);
-                }
-                
-                // Limit number of coaches to process
-                filteredCoaches = filteredCoaches.slice(0, CONFIG.MAX_COACHES);
-                
-                // Process each coach
-                currentResults = [];
-                let processed = 0;
-                
-                for (const coach of filteredCoaches) {
-                    elements.loadingText.textContent = `Processing coach ${processed + 1} of ${filteredCoaches.length}...`;
-                    
-                    const [cls, coachCode] = coach.split(':');
-                    const requestData = {
-                        trainNo: trainNumber,
-                        boardingStation: from || stationCodes[0],
-                        remoteStation: from || stationCodes[0],
-                        trainSourceStation: trainData.from,
-                        coach: coachCode,
-                        jDate: journeyDate,
-                        cls: cls
-                    };
-                    
-                    const coachResult = await fetchCoachData(requestData);
-                    
-                    if (coachResult && coachResult.length > 0) {
-                        currentResults.push(...coachResult);
-                    }
-                    
-                    processed++;
-                    // Small delay between requests
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                }
-                
-                // Sort and display results
-                currentResults.sort((a, b) => b.distance - a.distance);
-                displayResults();
-                
-                updateUIState('success');
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showError(`Error: ${error.message}. Please try again.`);
-            }
-        }
-
-        // Fetch data for a single coach
-        async function fetchCoachData(requestData) {
-            try {
-                const response = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://www.irctc.co.in/online-charts/api/coachComposition'), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(requestData)
-                });
-                
-                if (!response.ok) return [];
-                
-                const data = await response.json();
-                const berths = [];
-                
-                if (data.bdd) {
-                    data.bdd.forEach(item => {
-                        if (item.bsd) {
-                            item.bsd.forEach(bsd => {
-                                if (!bsd.occupancy) {
-                                    berths.push({
-                                        coach: requestData.coach,
-                                        berthNo: item.berthNo,
-                                        berthCode: item.berthCode || 'N/A',
-                                        from: bsd.from,
-                                        to: bsd.to,
-                                        distance: 0, // Will be calculated
-                                        quota: bsd.quota || 'N/A'
-                                    });
-                                }
-                            });
+            // Helper function for making API requests
+            async function makeRequest(url, params = {}) {
+                try {
+                    const response = await fetch(url, {
+                        headers: {
+                            'Accept': 'application/json',
                         }
                     });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('Request failed:', error);
+                    throw error;
+                }
+            }
+
+            // Get current date in YYYY-MM-DD format
+            function getCurrentDate() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            // Get current boarding station (simplified version)
+            function getCurrentBoardingStation(stations, date) {
+                const now = new Date();
+                const journeyDate = new Date(date);
+                
+                let latestPassedStation = stations[0];
+                
+                for (const station of stations) {
+                    const timeStr = station.dep || station.arr || '00:00';
+                    const [hours, minutes] = timeStr.split(':').map(Number);
+                    
+                    const stationTime = new Date(journeyDate);
+                    stationTime.setDate(stationTime.getDate() + ((station.day || 1) - 1));
+                    stationTime.setHours(hours || 0, minutes || 0, 0, 0);
+                    
+                    if (stationTime < now) {
+                        latestPassedStation = station;
+                    }
                 }
                 
-                return berths;
-            } catch (error) {
-                console.error(`Error fetching coach ${requestData.coach}:`, error);
-                return [];
+                return latestPassedStation?.code || stations[0]?.code;
             }
-        }
 
-        // Display results
-        function displayResults() {
-            // Update train info
-            if (currentTrainDetails) {
-                elements.trainName.textContent = currentTrainDetails.name;
-                elements.trainNo.textContent = currentTrainDetails.number;
-                elements.trainInfo.style.display = 'block';
+            // Show/hide loading state
+            function setLoading(isLoading) {
+                loader.style.display = isLoading ? 'block' : 'none';
+                checkButton.disabled = isLoading;
+                checkButton.innerHTML = isLoading ? 
+                    '<span>⏳ Processing...</span>' : 
+                    '<span>🔍 Check Availability</span>';
             }
-            
-            // Filter and sort results
-            const filteredResults = filterAndSortResults();
-            
-            // Update count
-            elements.resultCount.textContent = `${filteredResults.length} berth${filteredResults.length !== 1 ? 's' : ''} found`;
-            
-            // Populate coach filter
-            populateCoachFilter();
-            
-            // Display results
-            if (filteredResults.length === 0) {
-                elements.resultsTable.style.display = 'none';
-                elements.noResults.style.display = 'block';
-            } else {
-                elements.resultsTable.style.display = 'table';
-                elements.noResults.style.display = 'none';
+
+            // Show error message
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+
+            // Display results in table
+            function displayResults(berths, trainDetails) {
+                // Clear existing results
+                resultsBody.innerHTML = '';
                 
-                elements.resultsBody.innerHTML = '';
-                filteredResults.forEach(berth => {
+                // Update train info
+                if (trainDetails) {
+                    trainName.textContent = trainDetails.name;
+                    trainNo.textContent = trainDetails.number;
+                    trainInfo.style.display = 'block';
+                }
+                
+                // Filter berths by selected coach
+                const selectedCoach = coachFilter.value;
+                const filteredBerths = selectedCoach ? 
+                    berths.filter(b => b.coach === selectedCoach) : 
+                    berths;
+                
+                // Update result count
+                resultCount.textContent = `${filteredBerths.length} berth${filteredBerths.length !== 1 ? 's' : ''} found`;
+                
+                if (filteredBerths.length === 0) {
+                    resultsTable.style.display = 'none';
+                    noResults.style.display = 'block';
+                    return;
+                }
+                
+                // Populate table
+                filteredBerths.forEach(berth => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td><strong>${berth.coach}</strong></td>
-                        <td>${berth.berthNo}</td>
-                        <td>${berth.berthCode}</td>
-                        <td>${berth.from}</td>
-                        <td>${berth.to}</td>
-                        <td>${berth.distance} km</td>
-                        <td>${berth.quota}</td>
+                        <td><strong>${berth.coach || 'N/A'}</strong></td>
+                        <td>${berth.berthNo || 'N/A'}</td>
+                        <td>${berth.berthCode || 'N/A'}</td>
+                        <td>${berth.from || 'N/A'}</td>
+                        <td>${berth.to || 'N/A'}</td>
+                        <td>${berth.distance || '0'}</td>
+                        <td>${berth.quota || 'N/A'}</td>
                     `;
-                    elements.resultsBody.appendChild(row);
+                    resultsBody.appendChild(row);
+                });
+                
+                resultsTable.style.display = 'table';
+                noResults.style.display = 'none';
+                statusBar.style.display = 'flex';
+            }
+
+            // Populate coach filter dropdown
+            function populateCoachFilter(berths) {
+                coachFilter.innerHTML = '<option value="">All Coaches</option>';
+                
+                const coaches = [...new Set(berths.map(b => b.coach).filter(Boolean))].sort();
+                
+                coaches.forEach(coach => {
+                    const option = document.createElement('option');
+                    option.value = coach;
+                    option.textContent = coach;
+                    coachFilter.appendChild(option);
                 });
             }
-        }
 
-        // Filter and sort results based on current filters
-        function filterAndSortResults() {
-            const selectedCoach = elements.coachFilter.value;
-            const sortOption = elements.sortBy.value;
-            
-            let filtered = currentResults;
-            
-            // Filter by coach
-            if (selectedCoach) {
-                filtered = filtered.filter(b => b.coach === selectedCoach);
+            // Main function to check berth availability
+            async function checkAvailability() {
+                const trainNo = trainNumberInput.value.trim();
+                const from = fromStationInput.value.trim().toUpperCase();
+                const to = toStationInput.value.trim().toUpperCase();
+                const classFilter = classSelect.value;
+                
+                if (!trainNo) {
+                    showError('Please enter a train number');
+                    return;
+                }
+                
+                setLoading(true);
+                errorMessage.style.display = 'none';
+                trainInfo.style.display = 'none';
+                resultsTable.style.display = 'none';
+                noResults.style.display = 'none';
+                statusBar.style.display = 'none';
+                
+                try {
+                    const journeyDate = getCurrentDate();
+                    
+                    // Step 1: Get train chart data
+                    console.log('Fetching chart data...');
+                    const chartData = await makeRequest(`https://api2.trainapp.in/api/chart/${trainNo}/${journeyDate}`);
+                    
+                    // if (!chartData?.cpo || chartData.cpo !== 1) {
+                    //     const prepTime = chartData?.cpts || 'unknown time';
+                    //     showError(`Chart not prepared yet. Chart will be prepared at ${prepTime}`);
+                    //     setLoading(false);
+                    //     return;
+                    // }
+                    
+                    // Step 2: Get train details
+                    console.log('Fetching train details...');
+                    const trainData = await makeRequest(`https://api2.trainapp.in/api/train/${trainNo}`);
+                    
+                    if (!trainData || !trainData.stns) {
+                        throw new Error('Invalid train data received');
+                    }
+                    
+                    // Step 3: Get current boarding station
+                    const boardingStation = from || getCurrentBoardingStation(trainData.stns, journeyDate);
+                    
+                    // Step 4: Prepare coach data for batch requests
+                    const coaches = chartData?.cp || [];
+                    const coachData = coaches.map(coach => {
+                        const [cls, coachCode] = coach.split(':');
+                        return {
+                            trainNo: trainNo,
+                            boardingStation: boardingStation,
+                            remoteStation: boardingStation,
+                            trainSourceStation: trainData.from,
+                            coach: coachCode,
+                            jDate: journeyDate,
+                            cls: cls
+                        };
+                    });
+                    
+                    // Filter by class if specified
+                    let filteredCoachData = coachData;
+                    if (classFilter) {
+                        filteredCoachData = coachData.filter(item => item.cls === classFilter.toUpperCase());
+                    }
+                    
+                    if (filteredCoachData.length === 0) {
+                        showError('No coaches found for the selected class');
+                        setLoading(false);
+                        return;
+                    }
+                    
+                    // Step 5: Make batch requests for each coach
+                    console.log(`Making ${filteredCoachData.length} batch requests...`);
+                    
+                    const allBerths = [];
+                    const stationDistanceMap = {};
+                    
+                    // Create station distance mapping
+                    trainData.stns.forEach(stn => {
+                        stationDistanceMap[stn.code] = parseInt(stn.km) || 0;
+                    });
+                    
+                    const stationCodes = Object.keys(stationDistanceMap);
+                    const excludeFrom = [];
+                    const excludeTo = [];
+                    
+                    if (to) {
+                        const toIndex = stationCodes.indexOf(to);
+                        if (toIndex !== -1) {
+                            excludeFrom.push(...stationCodes.slice(toIndex));
+                        }
+                    }
+                    
+                    if (from) {
+                        const fromIndex = stationCodes.indexOf(from);
+                        if (fromIndex !== -1) {
+                            excludeTo.push(...stationCodes.slice(0, fromIndex + 1));
+                        }
+                    }
+                    
+                    // Process each coach
+                    for (const data of filteredCoachData) {
+                        try {
+                            const response = await fetch('https://www.irctc.co.in/online-charts/api/coachComposition', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            });
+                            
+                            if (!response.ok) {
+                                console.warn(`Failed to fetch data for coach ${data.coach}`);
+                                continue;
+                            }
+                            
+                            const result = await response.json();
+                            
+                            // Process berth data
+                            if (result.bdd) {
+                                result.bdd.forEach(item => {
+                                    if (item.bsd) {
+                                        item.bsd.forEach(bsd => {
+                                            if (!bsd.occupancy) {
+                                                // Apply station filters
+                                                if (excludeFrom.includes(bsd.from) || excludeTo.includes(bsd.to)) {
+                                                    return;
+                                                }
+                                                
+                                                const fromDist = stationDistanceMap[bsd.from];
+                                                const toDist = stationDistanceMap[bsd.to];
+                                                
+                                                if (fromDist !== undefined && toDist !== undefined) {
+                                                    const distance = Math.abs(toDist - fromDist);
+                                                    
+                                                    // Only include if distance > 100km
+                                                    if (distance > 100) {
+                                                        allBerths.push({
+                                                            coach: data.coach,
+                                                            berthNo: item.berthNo,
+                                                            berthCode: item.berthCode || null,
+                                                            from: bsd.from,
+                                                            to: bsd.to,
+                                                            distance: distance,
+                                                            quota: bsd.quota
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            
+                            // Small delay to avoid rate limiting
+                            await new Promise(resolve => setTimeout(resolve, 100));
+                            
+                        } catch (error) {
+                            console.error(`Error processing coach ${data.coach}:`, error);
+                        }
+                    }
+                    
+                    // Sort by distance (descending)
+                    allBerths.sort((a, b) => b.distance - a.distance);
+                    
+                    // Display results
+                    displayResults(allBerths, {
+                        number: trainData.number,
+                        name: trainData.name
+                    });
+                    
+                    populateCoachFilter(allBerths);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    showError(`Failed to fetch data: ${error.message}. Please try again.`);
+                } finally {
+                    setLoading(false);
+                }
             }
-            
-            // Sort results
-            switch(sortOption) {
-                case 'distance-desc':
-                    filtered.sort((a, b) => b.distance - a.distance);
-                    break;
-                case 'distance-asc':
-                    filtered.sort((a, b) => a.distance - b.distance);
-                    break;
-                case 'coach':
-                    filtered.sort((a, b) => a.coach.localeCompare(b.coach));
-                    break;
-            }
-            
-            return filtered;
-        }
 
-        // Populate coach filter dropdown
-        function populateCoachFilter() {
-            elements.coachFilter.innerHTML = '<option value="">All Coaches</option>';
+            // Event Listeners
+            checkButton.addEventListener('click', checkAvailability);
             
-            const coaches = [...new Set(currentResults.map(b => b.coach).filter(Boolean))].sort();
-            
-            coaches.forEach(coach => {
-                const option = document.createElement('option');
-                option.value = coach;
-                option.textContent = coach;
-                elements.coachFilter.appendChild(option);
+            coachFilter.addEventListener('change', () => {
+                // Re-display results with new filter
+                const trainNo = document.getElementById('trainNo').textContent;
+                const trainNameText = document.getElementById('trainName').textContent;
+                
+                if (trainNo && trainNameText) {
+                    const originalResults = JSON.parse(sessionStorage.getItem('lastResults') || '[]');
+                    displayResults(originalResults, {
+                        number: trainNo,
+                        name: trainNameText
+                    });
+                }
             });
-        }
 
-        // Filter results when filter changes
-        function filterResults() {
-            displayResults();
-        }
-
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', init);
+            // Allow Enter key to trigger search
+            trainNumberInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    checkAvailability();
+                }
+            });
+            
+            // Store results in session storage for filtering
+            const originalDisplayResults = displayResults;
+            window.displayResults = function(berths, trainDetails) {
+                sessionStorage.setItem('lastResults', JSON.stringify(berths));
+                originalDisplayResults(berths, trainDetails);
+            };
+        });
     </script>
 </body>
 </html>
